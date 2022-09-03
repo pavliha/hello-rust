@@ -1,36 +1,44 @@
-use rand::Rng;
-use std::{cmp::Ordering, io};
+use std::f32::consts::PI;
 
 fn main() {
-    let secret_number = rand::thread_rng().gen_range(1..=100);
+    trait Shape {
+        fn new(length: f32, width: f32) -> Self;
+        fn area(&self) -> f32;
+    }
 
-    loop {
-        let mut guess = String::new();
+    struct Rectangle {
+        length: f32,
+        width: f32,
+    }
 
-        print!("Guess the number: \n");
+    struct Circle {
+        length: f32,
+        width: f32,
+    }
 
-        io::stdin()
-        .read_line(&mut guess)
-        .expect("Unable to read line");
-
-        println!("=========");
-        let guess: u32 = match guess.trim().parse() {
-            Ok(num) => num,
-            Err(_) => continue
-        };
-        
-
-        match guess.cmp(&secret_number) {
-            Ordering::Less => println!("It's too small"),
-            Ordering::Equal => {
-                println!("Bulls eye!");
-                break;
-            }
-            Ordering::Greater => println!("It's too large"),
-        
+    impl Shape for Rectangle {
+        fn new(length: f32, width: f32) -> Rectangle {
+            return Rectangle { length, width };
         }
 
-        println!("=========");
-    
+        fn area(&self) -> f32 {
+            return self.length * self.width;
+        }
     }
+
+    impl Shape for Circle {
+        fn new(length: f32, width: f32) -> Circle {
+            return Circle { length, width };
+        }
+
+        fn area(&self) -> f32 {
+            return (self.length / 2.0).powf(2.0) * PI;
+        }
+    }
+
+    let rect: Rectangle = Shape::new(10.0, 10.0);
+    let circle: Circle = Shape::new(10.0, 10.0);
+
+    println!("Rect area: {:?}", rect.area());
+    println!("Circle area: {:?}", circle.area());
 }
